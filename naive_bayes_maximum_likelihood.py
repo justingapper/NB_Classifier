@@ -8,9 +8,9 @@ import numpy as np
 import pandas as pd
 
 # import data
-data = pd.read_csv('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamdata_binary.csv', header=None)
-labels = pd.read_csv('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamlabels.csv', header = None)
-groups = pd.read_csv('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\group.csv', index_col = None, header = None)
+data = pd.read_csv('C:\spamdata_binary.csv', header=None)
+labels = pd.read_csv('C:\spamlabels.csv', header = None)
+groups = pd.read_csv('C:\group.csv', index_col = None, header = None)
 
 
 class spam(object):
