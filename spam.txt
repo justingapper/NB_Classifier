@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+# file: spam.py
+"""
+Created on Mon Feb 22 13:51:27 2016
+
+@author: jgapper
+"""
+import random
+
+import numpy as np
+import pandas as pd
+#import matplotlib.pyplot as plt
+#import pickle
+from collections import defaultdict
+
+dat = pd.read_csv('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamdata_binary.csv', header=None)
+labels = pd.read_csv('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamlabels.csv', header = None)
+#labels.columns = ['labels']
+#dat['labels'] = labels
+#spamdata=np.genfromtxt('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamdata_binary.csv', delimiter=',')
+#labels=np.genfromtxt('C:\Users\jgapper\Desktop\CSDS\CS530\Assignment1\spamlabels.csv')
+
+class spam(object):
+    def __init__(self):
+        self.dat = dat
+        self.labels = labels
+        self.labels.columns = ['labels']
+        self.dat['labels'] = self.labels
+        self.sp_count = float
+        self.hm_count = float
+        self.spam_data = pd.DataFrame
+        self.ham_data = pd.DataFrame
+        self.spam_subset = pd.DataFrame
+        self.ham_subset = pd.DataFrame
+        self.likelihood = pd.DataFrame
+        self.bayes_score = pd.DataFrame
+
+    def rand(self, dat):
+        self.dat['rand'] = np.random.choice(range(0,10000), dat.shape[0])
+        self.dat = self.dat.sort_index(by='rand', ascending=0)
+        return self.dat
+        print(self.dat_sort)
+
+#    def fold(self, dat, k=10):
+#        for k in xrange(dat):
+        
+#        self.fold_size = len(dat)/10
+#        self.dat
+
+    def train(self, dat):
+        self.spam_data = self.dat[self.dat['labels']==1]
+        self.ham_data = self.dat[self.dat['labels']==0]
+        self.sp_count = (len(self.spam_data))
+        self.hm_count = (len(self.ham_data))
+        self.tot = float(len(self.dat))
+        self.prior = (self.sp_count / self.tot)
+        self.hm_pct = (1- self.prior)
+        self.spam_subset = self.spam_data.iloc[:,0:58].apply(pd.value_counts)
+        self.ham_subset = self.ham_data.iloc[:,0:58].apply(pd.value_counts)
+        self.likelihood = (self.spam_subset.iloc[1,:]/self.sp_count)
+        self.evidence = (self.spam_subset.iloc[1,:].add(self.ham_subset.iloc[1,:])/self.tot)
+        self.num = self.likelihood * self.prior
+        self.bayes = self.num.div(self.evidence)
+        self.score = self.dat.iloc[:,0:57].mul(self.bayes)
+        self.score['labels']=0
+        self.sum_score = self.score.sum(1)
+        self.total_words = self.dat.iloc[:,0:57].sum(1)
+        self.bayes_score = self.sum_score.div(self.total_words)
+        self.bayes_score.columns= ['score']
+        self.dat['score'] = self.bayes_score
+        self.dat.loc[self.dat['score']<.5, 'score'] = 0
+        self.dat.loc[self.dat['score']!=0, 'score'] = 1
+        self.dat.loc[self.dat['score']==self.dat['labels'], 'correct_class'] = 1
+        self.dat.loc[self.dat['score']!=self.dat['labels'], 'correct_class'] = 0
+        self.corr_count = len(self.dat[self.dat['correct_class']==1])
+        self.acc = self.corr_count/self.tot
+
+    def pr(self, dat):
+#        print(self.likelihood)
+#        print(self.evidence)
+#        print(self.prior)
+        print(self.acc)
+#        print(self.dat['labels'])
+#        print(self.spam_pct)   
+#        print(self.spam_count)
+#        print(self.count)
+#        print(self.dat)
+        
+sp = spam()
+sp.rand(dat)
+sp.train(dat)
+sp.pr(dat)
+
+
+

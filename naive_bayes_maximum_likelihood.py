@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 # file: spam.py
 """
-Created on Fri Feb 19 13:51:27 2016
-
 @author: jgapper
 """
 
